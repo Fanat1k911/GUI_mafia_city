@@ -35,19 +35,26 @@ def zero_position_window():
     pg.sleep(3)
     pg.moveTo(end_pos_x, end_pos_y + 20)
     pg.hotkey('command', 'control')
-    pg.dragTo(end_pos_x + 100, end_pos_y + 100, button='left', duration=0.5)
+    pg.dragTo(end_pos_x + 200, end_pos_y + 200, button='left', duration=0.5)
 
 
 # zero_position_window()
 
 while True:
-    try:
-        position = pg.locateOnScreen('screenshots/get_loot.png', confidence=0.7)
+    pg.click(50, 55, button='left')
+    position = pg.locateOnScreen('screenshots/get_loot.png', confidence=0.7)
+    if position:
+        pg.click(int(position[0] / 2), int(position[1] / 2), button='left')
         print('cords main_menu ===>', int(position[0] / 2), int(position[1] / 2))
         pg.sleep(3)
-    except KeyboardInterrupt as e:
-        print(e)
-        pg.sleep(3)
-    except pg.ImageNotFoundException as ie:
-        print(ie)
+        if int(position[1] / 2) > 290:
+            print('Низко находится, не помещается в окне', int(position[1] / 2))
+            pg.scroll(2)
+        elif int(position[1] / 2) < 290:
+            print('Высоко находится', int(position[1] / 2))
+            pg.scroll(-2)
+        else:
+            print('ровно 290 или хз')
+    else:
+        pg.dragTo(position[0], 270, duration=0.5, button='left')
         pg.sleep(3)
